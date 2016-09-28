@@ -2,6 +2,9 @@
 API Course, Lesson 1 -->
 <html>
  <head>
+   <title>Hello World</title>
+   <meta name="viewport" content="initial-scale=1.0">
+   <meta charset="utf-8">
  <!-- styles put here, but you can include a CSS file and reference it instead! -->
    <style type="text/css">
      html, body { height: 100%; margin: 0; padding: 0; }
@@ -10,17 +13,28 @@ API Course, Lesson 1 -->
  </head>
  <body>
    <!-- TODO 1: Create a place to put the map in the HTML-->
-   <div></div>
+   <div id="map"></div>
    <script>
-     // TODO: Create a map variable
-
+    var map;
      // TODO: Complete the following function to initialize the map
      function initMap() {
        // TODO: use a constructor to create a new map JS object. You can use the coordinates
-       // we used, 40.7413549, -73.99802439999996 or your own!
+       map = new google.maps.Map(document.getElementById('map'), {
+         center: {lat: 40.7413549, lng: -73.9980243999999 },
+         zoom: 12
+       });
+       var tribeca = {lat: 40.719526, lng: -74.0089934};
+
+       var marker = new google.maps.Marker({
+         position: tribeca,
+         map: map,
+         title: 'First Marker!'
+       });
      }
    </script>
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFNEbCIajW_75HYkGBCYudNr1-5hp3J5E&v=3&callback=initMap"
+   async defer></script>
    <script>
    </script>
  </body>
