@@ -71,6 +71,12 @@ API Course, Lesson 1 -->
   .text {
     font-size: 12px;
   }
+
+  #toggle-drawing {
+    width: 27%;
+    position: relative;
+    margin-left: 10px;
+  }
   </style>
  </head>
 <body>
@@ -80,6 +86,9 @@ API Course, Lesson 1 -->
       <div>
         <input type="button" value="Show Listings" id="show-listing">
         <input type="button" value="Hide Listings" id="hide-listing">
+        <hr>
+        <span class="text"> Draw a shape to search within it for homes!</span>
+        <input type="button" value="Drawing Tools" id="toggle-drawing">
       </div>
     </div>
     <div id="map"></div>
@@ -88,6 +97,7 @@ API Course, Lesson 1 -->
 
 var map;
 var markers = [];
+var polygon = null;
 var styles = [
   {
     "elementType": "geometry",
@@ -293,6 +303,18 @@ function initMap() {
   ];
 
   var largeInfowindow = new google.maps.InfoWindow();
+
+  var drawingManager = new google.maps.drawing.DrawingManager({
+    drawingMode: google.maps.drawing.OverlayType.POLYGON,
+    drawingControl: true,
+    drawingControlOptions: {
+      position: google.maps.ControlPosition.TOP_LEFT,
+      drawingModes: [
+        google.maps.drawing.OverlayType.POLYGON
+      ]
+    }
+  });
+
   var defaultIcon = makeMarkerIcon('0091ff');
   var highlightedIcon = makeMarkerIcon('FFFF24');
 
@@ -323,6 +345,29 @@ function initMap() {
 
   document.getElementById('show-listing').addEventListener('click', showListings);
   document.getElementById('hide-listing').addEventListener('click', hideListings);
+
+  document.getElementById('toggle-drawing').addEventListener('click', function() {
+    toggleDrawing(drawingManager);
+  });
+
+  drawingManager.addListener('overlaycomplete', function(event) {
+    if (polygon) {
+      polygon.setMap(null);
+      hideListings();
+    }
+
+
+
+    drawingManager.setDrawingMode(null);
+    polygon = event.overlay;
+    polygon.setEditable(true);
+    var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+    console.log(area);
+    searchWithinPolygon();
+
+    polygon.getPath().addListener('set_at', searchWithinPolygon);
+    polygon.getPath().addListener('insert_at', searchWithinPolygon);
+  })
 }
 
 function populateInfoWindow(marker, infowindow) {
@@ -389,10 +434,32 @@ function makeMarkerIcon(markerColor) {
     console.log(markerImage);
   return markerImage;
 }
+
+function toggleDrawing(drawingManager) {
+  if (drawingManager.map) {
+    drawingManager.setMap(null);
+
+    if (polygon) {
+      polygon.setMap(null);
+    }
+  } else {
+    drawingManager.setMap(map);
+  }
+}
+
+function searchWithinPolygon() {
+  for (var i = 0; i < markers.length; i++) {
+    if (google.maps.geometry.poly.containsLocation(markers[i].position, polygon)) {
+      markers[i].setMap(map);
+    } else {
+      markers[i].setMap(null);
+    }
+  }
+}
   </script>
 
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
-   <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyDFNEbCIajW_75HYkGBCYudNr1-5hp3J5E&v=3&callback=initMap"
+   <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry&key=AIzaSyDFNEbCIajW_75HYkGBCYudNr1-5hp3J5E&v=3&callback=initMap"
    async defer></script>
    <script>
    </script>
