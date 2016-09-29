@@ -8,31 +8,75 @@ API Course, Lesson 1 -->
   <meta charset="utf-8">
  <!-- styles put here, but you can include a CSS file and reference it instead! -->
   <style type="text/css">
-   html, body { height: 100%; margin: 0; padding: 0; }
-   #map {
-     height: 100%;
-     bottom: 0px;
-     left: 362px;
-     position: absolute;
-     right: 0px;
-    }
+  html,
+  body {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
 
-   .options-box {
-     background: #fff;
-     /*border: 1px solid #999;*/
-     border-radius: 3px;
-     height: 100%;
-     line-height: 35px;
-     padding: 10px 10px 30px 10px;
-     text-align: left;
-     width: 340px;
-   }
+  .container {
+    height: 100%;
+    position: relative;
+  }
+
+  input {
+    font-size: 12px;
+  }
+
+  h1 {
+    color: #525454;
+    font-size: 22px;
+    margin: 0 0 10px 0;
+    text-align: center;
+  }
+
+  #hide-listings,
+  #show-listings {
+    width: 48%;
+  }
+
+  hr {
+    background: #D0D7D9;
+    height: 1px;
+    margin: 20px 0 20px 0;
+    border: none;
+  }
+
+  #map {
+    bottom:0px;
+    height: 100%;
+    left: 362px;
+    position: absolute;
+    right: 0px;
+  }
+
+  .options-box {
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 3px;
+    height: 100%;
+    line-height: 35px;
+    padding: 10px 10px 30px 10px;
+    text-align: left;
+    width: 340px;
+  }
+
+  #pano {
+    width: 200px;
+    height: 200px;
+  }
+
+  .text {
+    font-size: 12px;
+  }
   </style>
  </head>
 <body>
   <div class="container">
     <div class="options-box">
-      <h1>Find Pour New NYC Home</h1>
+      <h1>Find Your New NYC Home</h1>
       <div>
         <input type="button" value="Show Listings" id="show-listing">
         <input type="button" value="Hide Listings" id="hide-listing">
@@ -283,12 +327,39 @@ function initMap() {
 
 function populateInfoWindow(marker, infowindow) {
   if (infowindow.marker != marker) {
+    infowindow.setContent('');
     infowindow.marker = marker;
-    infowindow.setContent('<div>' + marker.title + '</div>');
-    infowindow.open(map, marker);
     infowindow.addListener('closeclick', function() {
       infowindow.setMarker(null);
     });
+    var streetViewService = new google.maps.StreetViewService();
+    var radius = 50;
+
+    function getStreetView(data, status) {
+      if (status == google.maps.StreetViewStatus.OK) {
+        var nearStreetViewLocation = data.location.latLng;
+        var heading = google.maps.geometry.spherical.computeHeading(
+          nearStreetViewLocation, marker.position);
+          console.log(heading);
+          infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+          var panoramaOptions = {
+            position: nearStreetViewLocation,
+            pov: {
+              heading: heading,
+              pitch: 30
+            }
+          };
+        var panorama = new google.maps.StreetViewPanorama(
+          document.getElementById('pano'), panoramaOptions);
+      } else {
+        infowindow.setContent('<div>' + marker.title + '</div>' +
+      '<div>No Street View Found</div>');
+      }
+    }
+
+    streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+
+    infowindow.open(map, marker);
   }
 }
 
@@ -321,7 +392,7 @@ function makeMarkerIcon(markerColor) {
   </script>
 
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFNEbCIajW_75HYkGBCYudNr1-5hp3J5E&v=3&callback=initMap"
+   <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyDFNEbCIajW_75HYkGBCYudNr1-5hp3J5E&v=3&callback=initMap"
    async defer></script>
    <script>
    </script>
