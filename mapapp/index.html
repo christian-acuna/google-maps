@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- This is the corresponding "starter code" for 04_Hello Map in Udacity and Google's Maps
+API Course, Lesson 1 -->
+<html>
+<head>
+  <title>Hello World</title>
+  <meta name="viewport" content="initial-scale=1.0">
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="styles.css" media="screen" title="no title">
+ </head>
+<body>
+  <div class="container">
+    <div class="options-box">
+      <h1>Find Your New NYC Home</h1>
+      <div>
+        <input type="button" value="Show Listings" id="show-listing">
+        <input type="button" value="Hide Listings" id="hide-listing">
+        <hr>
+        <span class="text"> Draw a shape to search within it for homes!</span>
+        <input type="button" value="Drawing Tools" id="toggle-drawing">
+        <hr>
+        <div>
+          <input type="text" id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
+          <input type="button" value="Zoom" id="zoom-to-area">
+        </div>
+        <hr>
+        <div>
+          <span class="text">Within</span>
+          <select id="max-duration">
+            <option value="10">10 min</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+            <option value="60">1 hour</option>
+          </select>
+          <select id="mode">
+            <option value="DRIVING">drive</option>
+            <option value="WALKING">walk</option>
+            <option value="BICYCLING">bike</option>
+            <option value="TRANSIT">transit ride</option>
+          </select>
+          <span class="text">of</span>
+          <input type="text" id="search-within-time-text" placeholder="Ex: Google Office NYC or 75 9th Ave, New York, NY">
+          <input type="button" value="Go" id="search-within-time">
+        </div>
+      </div>
+    </div>
+    <div id="map"></div>
+  </div>
+  <script src="map.js" charset="utf-8"></script>
+   <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry&key=AIzaSyDFNEbCIajW_75HYkGBCYudNr1-5hp3J5E&v=3&callback=initMap"
+   async defer></script>
+   <script>
+   </script>
+ </body>
+</html>
