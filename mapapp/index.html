@@ -20,7 +20,7 @@ API Course, Lesson 1 -->
         <input type="button" value="Drawing Tools" id="toggle-drawing">
         <hr>
         <div>
-          <input type="text" id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
+          <input type="text" id="zoom-to-area-text" placeholder="Enter your favorite area!">
           <input type="button" value="Zoom" id="zoom-to-area">
         </div>
         <hr>
@@ -42,12 +42,18 @@ API Course, Lesson 1 -->
           <input type="text" id="search-within-time-text" placeholder="Ex: Google Office NYC or 75 9th Ave, New York, NY">
           <input type="button" value="Go" id="search-within-time">
         </div>
+        <hr>
+        <div>
+          <span class="text">Search for nearby places</span>
+          <input type="text" id="places-search" placeholder="Ex: Pizza delivery in NYC">
+          <input type="button" id="go-places" value="Go">
+        </div>
       </div>
     </div>
     <div id="map"></div>
   </div>
   <script src="map.js" charset="utf-8"></script>
-   <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry&key=AIzaSyDFNEbCIajW_75HYkGBCYudNr1-5hp3J5E&v=3&callback=initMap"
+   <script src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyDFNEbCIajW_75HYkGBCYudNr1-5hp3J5E&v=3&callback=initMap"
    async defer></script>
    <script>
    </script>
